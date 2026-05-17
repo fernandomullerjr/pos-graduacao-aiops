@@ -30,6 +30,34 @@ Entregue. Prompt, modelo, output e justificativa mostrando como Role, Task e For
 ________________________________________ 
 
 
+---
+
+## Como a entrega deve ser feita
+
+A entrega é um **repositório público no GitHub** contendo os prompts, outputs e justificativas das 8 questões. O link do repositório deve ser enviado ao final.
+
+> 💡 A organização interna do repositório é **livre e intencional**. No Capítulo 4 deste módulo será abordado *Criação e Versionamento de Prompts*, e a estrutura escolhida aqui será comparada com as práticas apresentadas lá. **Guardar a decisão** — ela é parte do aprendizado.
+
+### Campos obrigatórios por questão
+
+| Campo | O que deve conter |
+| --- | --- |
+| **Prompt** | O texto exato usado. |
+| **Modelo** | Qual modelo foi executado (ex.: GPT-4o, Claude Sonnet 4, Gemini 2.5 Pro, Llama 3 via Ollama) e, em 1 linha, por que esse modelo foi escolhido para a tarefa. |
+| **Output** | A resposta real do modelo, na íntegra ou em trecho relevante. |
+| **Justificativa** | Em 2 a 4 linhas, mostrar como os componentes do framework indicado no enunciado aparecem no prompt. Na **Q08** a justificativa precisa **comparar o framework escolhido com 2 alternativas**. |
+
+### Orientações práticas
+
+- Usar **ao menos 2 providers distintos** ao longo do desafio (OpenAI, Anthropic, Google, Meta ou local via Ollama).
+- **Registrar outputs ruins também**. Se um resultado não ficou bom, comentar na justificativa o que faria diferente.
+- Os dados dos cenários são fictícios — sem necessidade de sanitização.
+
+> ℹ️ Sete das oito questões já trazem o framework definido no enunciado: ali o valor está em **aplicar bem os componentes no prompt** e explicar como cada um aparece. Na **Q08** a escolha é sua entre os cinco do capítulo, e a justificativa compara com 2 alternativas. **Registrar o raciocínio, inclusive o que não funcionou, faz parte do valor da entrega.**
+
+---
+
+
 RESPOSTA:
 
 # Role
