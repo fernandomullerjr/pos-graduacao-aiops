@@ -170,7 +170,8 @@ Forneça um plano de ação visando a substituição do Deployment antigo pelo m
 
 ## 🤖 Campo 2: Modelo
 
-ChatGPT GPT-5.5
+* **Modelo:** `ChatGPT GPT-5.5`
+* **Justificativa de Escolha:** Costuma entregar manifesto Kubernetes completo numa rodada só (probes, securityContext, requests/limits, rollout) e ainda traz Secret/HPA/PDB como recursos auxiliares sem precisar pedir.
 
 ---
 

@@ -1,27 +1,41 @@
-5.	Engenharia de Prompt e Contexto
-# Desafio prático - Frameworks de Prompt Engineering 
+# Um dia na Hill Valley Tech
 
-Um dia na Hill Valley Tech
-A Hill Valley Tech é uma empresa fictícia que serve de palco para este desafio. Tem cinco sistemas em produção, cada um com seu papel bem definido. O Chronos é o API gateway e a plataforma core, ponto de entrada de todo tráfego da empresa. Por trás dele, o Ledger é um data warehouse em PostgreSQL que guarda histórico de transações e eventos, enquanto o Reactor toca o processamento assíncrono por filas de mensagens. Em paralelo a tudo isso, o Beacon mantém a observabilidade do ambiente inteiro, métricas, logs e alertas, e é por ele que o plantão enxerga o que está acontecendo. Fora do core principal, o Lift é um produto em beta que o time vem amadurecendo à parte.
-O time que toca essa operação também é enxuto. Doc Brown, o CTO, responde pela direção técnica. Jennifer Parker é a PM que prioriza o que o produto entrega. Lorraine Baines lidera a SRE e responde pelo plantão, é dela a cobrança por runbooks e procedimentos documentados. George McFly é o engenheiro sênior veterano que escreveu boa parte do sistema legado, e muita coisa ainda roda exatamente como ele deixou anos atrás. Goldie Wilson, a CEO, observa tudo pelo prisma de custo e crescimento. E Strickland, head de segurança e compliance, é quem bate carimbo nos padrões internos que todo código novo precisa seguir.
-Nos próximos cenários você vai pegar algumas dessas demandas que chegam à mesa do time. Em cada questão, a entrega é um prompt de IA aplicando o framework indicado no enunciado, executado em um modelo, com o output registrado e a justificativa mostrando como os componentes do framework apareceram no prompt. A Questão 08 foge desse padrão: a escolha do framework fica por sua conta entre os cinco do capítulo, com comparação explícita contra duas alternativas.
+## Cenário
 
-________________________________________
-Questão 02 - Script de backup do Ledger
-Lorraine chegou à conclusão de que o Ledger, o PostgreSQL que o George levantou na EC2 anos atrás, nunca teve rotina de backup automatizada. Hoje isso é uma dependência aberta no radar da SRE, e ela quer fechar com uma cron diária. O ambiente onde o script vai rodar:
-•	Host: ledger-db.internal.hvt.io
-•	Porta: 5432
-•	Banco: ledger_prod
-•	Usuário de backup: backup_user
-•	Senha: variável de ambiente PGPASSWORD, populada pelo AWS Secrets Manager via IAM role da instância
-•	Região AWS: us-east-1
-•	SO da instância: Ubuntu 22.04 LTS
-•	Diretório de trabalho com 80 GB livres: /var/backups/ledger
-•	Tamanho médio atual do dump compactado: ~12 GB
-O script precisa fazer o dump com pg_dump, compactar com gzip, subir o arquivo pro bucket S3 hvt-ledger-backups via aws s3 cp, manter 30 dias de retenção no S3 (removendo os mais antigos), registrar cada execução em /var/log/ledger-backup.log com timestamp, e sair com exit code adequado em caso de falha.
-Tarefa. Aplicando o framework R-T-F, escrever o prompt de IA que produza esse script bash.
-Entregue. Prompt, modelo, output e justificativa mostrando como Role, Task e Format aparecem no prompt.
-________________________________________
+A **Hill Valley Tech** é uma empresa fictícia que serve de palco para este desafio. Tem cinco sistemas em produção, cada um com seu papel bem definido:
+
+| Sistema | Papel |
+| --- | --- |
+| **Chronos** | API gateway e plataforma core, ponto de entrada de todo tráfego da empresa. |
+| **Ledger** | Data warehouse em PostgreSQL que guarda histórico de transações e eventos. |
+| **Reactor** | Processamento assíncrono por filas de mensagens. |
+| **Beacon** | Observabilidade do ambiente inteiro — métricas, logs e alertas; é por ele que o plantão enxerga o que está acontecendo. |
+| **Lift** | Produto em beta que o time vem amadurecendo à parte, fora do core principal. |
+
+## Personagens
+
+O time que toca essa operação também é enxuto:
+
+| Personagem | Papel |
+| --- | --- |
+| **Doc Brown** | CTO, responde pela direção técnica. |
+| **Jennifer Parker** | PM que prioriza o que o produto entrega. |
+| **Lorraine Baines** | Lidera a SRE e responde pelo plantão; é dela a cobrança por runbooks e procedimentos documentados. |
+| **George McFly** | Engenheiro sênior veterano que escreveu boa parte do sistema legado; muita coisa ainda roda exatamente como ele deixou anos atrás. |
+| **Goldie Wilson** | CEO, observa tudo pelo prisma de custo e crescimento. |
+| **Strickland** | Head de segurança e compliance; quem bate carimbo nos padrões internos que todo código novo precisa seguir. |
+
+## Como funciona o desafio
+
+Nos próximos cenários você vai pegar algumas dessas demandas que chegam à mesa do time. Em cada questão, a entrega é:
+
+- um **prompt de IA** aplicando o framework indicado no enunciado;
+- executado em um **modelo**;
+- com o **output** registrado;
+- e a **justificativa** mostrando como os componentes do framework apareceram no prompt.
+
+> ⚠️ A **Questão 08** foge desse padrão: a escolha do framework fica por sua conta entre os cinco do capítulo, com comparação explícita contra duas alternativas.
+
 
 ---
 
@@ -50,23 +64,62 @@ A entrega é um **repositório público no GitHub** contendo os prompts, outputs
 
 ---
 
-RESPOSTA:
+## Questão 02 — Script de backup do Ledger
 
+Lorraine chegou à conclusão de que o **Ledger** — o PostgreSQL que o George levantou na EC2 anos atrás — nunca teve rotina de backup automatizada. Hoje isso é uma dependência aberta no radar da SRE, e ela quer fechar com uma cron diária.
+
+**Ambiente onde o script vai rodar:**
+
+| Item | Valor |
+| --- | --- |
+| Host | `ledger-db.internal.hvt.io` |
+| Porta | `5432` |
+| Banco | `ledger_prod` |
+| Usuário de backup | `backup_user` |
+| Senha | variável de ambiente `PGPASSWORD`, populada pelo AWS Secrets Manager via IAM role da instância |
+| Região AWS | `us-east-1` |
+| SO da instância | Ubuntu 22.04 LTS |
+| Diretório de trabalho | `/var/backups/ledger` (80 GB livres) |
+| Tamanho médio atual do dump compactado | ~12 GB |
+
+**Requisitos do script:**
+
+- fazer o dump com `pg_dump`;
+- compactar com `gzip`;
+- subir o arquivo pro bucket S3 `hvt-ledger-backups` via `aws s3 cp`;
+- manter **30 dias de retenção** no S3 (removendo os mais antigos);
+- registrar cada execução em `/var/log/ledger-backup.log` com timestamp;
+- sair com **exit code adequado** em caso de falha.
+
+> **Tarefa.** Aplicando o framework **R-T-F**, escrever o prompt de IA que produza esse script bash.
+>
+> **Entregue.** Prompt, modelo, output e justificativa mostrando como **Role**, **Task** e **Format** aparecem no prompt.
+
+---
+
+# RESPOSTA
+
+---
+
+## 💻 Campo 1: Prompt
+
+```text
 # Role
 Você é um DBRE especialista.
 
 # Task
 Criar Script de Backup que rode diariamente.
 O ambiente onde o script vai rodar:
-•	Host: ledger-db.internal.hvt.io
-•	Porta: 5432
-•	Banco: ledger_prod
-•	Usuário de backup: backup_user
-•	Senha: variável de ambiente PGPASSWORD, populada pelo AWS Secrets Manager via IAM role da instância
-•	Região AWS: us-east-1
-•	SO da instância: Ubuntu 22.04 LTS
-•	Diretório de trabalho com 80 GB livres: /var/backups/ledger
-•	Tamanho médio atual do dump compactado: ~12 GB
+- Host: ledger-db.internal.hvt.io
+- Porta: 5432
+- Banco: ledger_prod
+- Usuário de backup: backup_user
+- Senha: variável de ambiente PGPASSWORD, populada pelo AWS Secrets Manager via IAM role da instância
+- Região AWS: us-east-1
+- SO da instância: Ubuntu 22.04 LTS
+- Diretório de trabalho com 80 GB livres: /var/backups/ledger
+- Tamanho médio atual do dump compactado: ~12 GB
+
 O script precisa fazer o dump com pg_dump, compactar com gzip, subir o arquivo pro bucket S3 hvt-ledger-backups via aws s3 cp, manter 30 dias de retenção no S3 (removendo os mais antigos), registrar cada execução em /var/log/ledger-backup.log com timestamp, e sair com exit code adequado em caso de falha.
 Adicionar etapas de validações e tratamento de erros.
 Guardar logs de execução no /var/log.
@@ -77,9 +130,18 @@ No começo do arquivo trecho comentado com no máximo 3 linhas, explicando sobre
 Utilizar variáveis de fácil manutenção logo no começo.
 Script deve conter comentários sem exageros.
 Logs de execução também jogar na tela.
+```
 
+---
 
-Resultado:
+## 🤖 Campo 2: Modelo
+
+* **Modelo:** `ChatGPT GPT-5`
+* **Justificativa de Escolha:** Pra scripts de shell costuma trazer estrutura organizada (variáveis no topo, funções de log, tratamento de erro por etapa), que é exatamente o que esse tipo de rotina de backup precisa.
+
+---
+
+## 📄 Campo 3: Output
 
 ```bash
 #!/usr/bin/env bash
@@ -283,3 +345,9 @@ log "Backup finalizado com sucesso"
 
 exit 0
 ```
+
+---
+
+## ⚖️ Campo 4: Justificativa
+
+Aplicando o R-T-F, no **Role** defini o perfil (DBRE especialista) pra puxar conhecimento de operação de banco e cuidados de backup. Na **Task** descrevi o ambiente completo (host, porta, banco, usuário, região, SO, diretório, tamanho do dump) e listei explicitamente o que o script precisa fazer (`pg_dump`, `gzip`, upload S3, retenção de 30 dias, log com timestamp e exit code adequado), pedindo validações e tratamento de erro. No **Format** delimitei a saída como script bash com variáveis nomeadas no topo, cabeçalho curto, comentários comedidos e logs duplicados em tela e arquivo, pra que o operador consiga acompanhar a execução sem precisar abrir o log.

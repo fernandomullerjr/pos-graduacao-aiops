@@ -131,7 +131,9 @@ Lorraine quer um runbook que **qualquer plantonista consiga seguir de ponta a po
 ---
 
 ## 🤖 Campo 2: Modelo
-Claude Sonnet 4.6
+
+* **Modelo:** `Claude Sonnet 4.6`
+* **Justificativa de Escolha:** Costuma organizar bem procedimento sequencial com critério objetivo por passo, que é exatamente o que um runbook de plantão precisa pra reduzir variação entre quem assume.
 
 ---
 

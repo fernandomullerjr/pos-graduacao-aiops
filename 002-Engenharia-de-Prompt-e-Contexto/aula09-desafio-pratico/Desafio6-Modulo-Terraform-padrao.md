@@ -161,7 +161,9 @@ resource "aws_vpc" "this" {
 ---
 
 ## 🤖 Campo 2: Modelo
-Gemini 1.5 Flash
+
+* **Modelo:** `Gemini 1.5 Flash`
+* **Justificativa de Escolha:** Mais rápido e barato pra geração de IaC. Pra Terraform de S3 com regras objetivas (tags, prefixo, encryption, versioning) costuma dar conta sem precisar partir pro Pro.
 
 ---
 

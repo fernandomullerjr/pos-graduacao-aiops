@@ -202,7 +202,9 @@ No restante do documento é esperado o detalhamento, comandos de apoio, comandos
 ---
 
 ## 🤖 Campo 2: Modelo
-ChatGPT GPT-5.5
+
+* **Modelo:** `ChatGPT GPT-5.5`
+* **Justificativa de Escolha:** Pra análise de incidente com várias evidências (deploy, métricas, log, fila, cluster) costuma cruzar tudo numa hipótese coerente e ainda entrega plano de ação com comandos prontos.
 
 ---
 
