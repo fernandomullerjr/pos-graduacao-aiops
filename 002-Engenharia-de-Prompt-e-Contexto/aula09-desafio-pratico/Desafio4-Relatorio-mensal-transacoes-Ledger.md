@@ -318,3 +318,122 @@ Precisa de mais algum ajuste?
 Seguindo o framework T-A-G, procurei detalhar na task um pouco do contexto sobre o relatório que seria necessário e algumas particularidades da fonte de dados.
 Na action eu procurei detalhar o que seria necessário fazer exatamente, particularidades e regras gerais.
 Em goal eu procurei detalhar o resultado esperado, considerando o tipo de usuário que iria consumir o material.
+
+
+
+# NOVA RESPOSTA
+Efetuando ajustes, visando corrigir pontos sinalizados pelo avaliador, o Pierry Medeiros.
+
+---
+
+## 💻 Campo 1: Prompt
+
+Você atua como atua como Engenheiro e Cientista de Dados na Hill Valley Tech, e possui larga experiencia como DBA e DBRE em PostgreSQL.
+
+[TASK]
+Sua tarefa é escrever UMA query SQL (PostgreSQL) que gere um relatório de crescimento de transações dos últimos 6 meses por categoria, a partir do banco Ledger. O entregável é a query SQL pronta para executar — não execute nem invente dados. As duas tabelas relevantes são:
+
+```sql
+CREATE TABLE transactions (
+  id              BIGSERIAL PRIMARY KEY,
+  customer_id     BIGINT NOT NULL REFERENCES customers(id),
+  category        VARCHAR(32) NOT NULL,
+  amount_cents    BIGINT NOT NULL,
+  status          VARCHAR(16) NOT NULL,
+  payment_method  VARCHAR(16),
+  created_at      TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  completed_at    TIMESTAMPTZ
+);
+
+CREATE INDEX idx_transactions_created_at ON transactions(created_at);
+CREATE INDEX idx_transactions_status ON transactions(status);
+CREATE INDEX idx_transactions_category ON transactions(category);
+
+CREATE TABLE customers (
+  id          BIGSERIAL PRIMARY KEY,
+  segment     VARCHAR(16) NOT NULL,
+  country     CHAR(2) NOT NULL,
+  signup_at   TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+```
+
+[ACTION]
+Construa a query seguindo EXATAMENTE estas regras:
+- Considerar apenas as categorias em produção: 'subscription', 'one_time',
+  'refund' e 'credit_adjustment'.
+- Filtrar somente transações com status = 'completed'.
+- O campo amount_cents está em centavos de real; exibir o volume em reais com
+  2 casas decimais (amount_cents / 100.0).
+- Recorte temporal: últimos 6 meses corridos a partir de 2026-04-24, filtrando
+  por created_at (use a data 2026-04-24 ancorada na própria query, ex.:
+  created_at >= DATE '2026-04-24' - INTERVAL '6 months'
+  AND created_at <  DATE '2026-04-24').
+- Agrupar por mês no formato 'YYYY-MM' (ex.: to_char(created_at, 'YYYY-MM'))
+  e por categoria.
+- Trazer duas métricas por linha: quantidade de transações (COUNT) e volume
+  total em reais (SUM).
+- Ordenação final: mês crescente e, dentro do mês, categoria crescente (A-Z).
+
+[GOAL]
+O objetivo é entregar uma query SQL correta, legível e comentada, que a Jennifer (PM) possa repassar para alguém executar no Ledger e obter os números consolidados — sem que ela própria precise saber SQL. A query deve ser o produto final: nada de dados fictícios, apenas o SQL pronto para rodar.
+
+---
+
+## 🤖 Campo 2: Modelo
+
+* **Modelo:** `DeepSeek V3`
+* **Justificativa de Escolha:** Escolhido para validar como ele se sairia com este tipo de trabalho, visto que é um modelo muito bom, mas normalmente utilizo o Gemini, Claude ou ChatGPT, então gostaria de validar como ele se saía.
+* **Pontos negativos:**  Revisando o output entregue pelo Deepseek, usei o Claude para revisar, ele identificou um ponto de ajuste recomendado para poder garantir 2 casas decimais.
+
+---
+
+## 📄 Campo 3: Output
+
+```sql
+-- =============================================================================
+-- RELATÓRIO DE CRESCIMENTO DE TRANSAÇÕES - ÚLTIMOS 6 MESES
+-- =============================================================================
+-- Descrição: Gera o volume e quantidade de transações completas por mês e categoria
+-- Período: 6 meses corridos anteriores a 2026-04-24 (excluindo a data de corte)
+-- Categorias consideradas: subscription, one_time, refund, credit_adjustment
+-- =============================================================================
+
+WITH meses_categorias AS (
+  SELECT
+    to_char(t.created_at, 'YYYY-MM') AS mes,
+    t.category,
+    COUNT(*) AS quantidade_transacoes,
+    SUM(t.amount_cents) / 100.0 AS volume_total_reais
+  FROM
+    transactions t
+  WHERE
+    -- Filtro de período: últimos 6 meses corridos até 2026-04-24 (exclusivo)
+    t.created_at >= DATE '2026-04-24' - INTERVAL '6 months'
+    AND t.created_at < DATE '2026-04-24'
+    -- Apenas transações com status concluído
+    AND t.status = 'completed'
+    -- Apenas categorias em produção (explicitamente listadas)
+    AND t.category IN ('subscription', 'one_time', 'refund', 'credit_adjustment')
+  GROUP BY
+    to_char(t.created_at, 'YYYY-MM'),
+    t.category
+)
+SELECT
+  mes,
+  category,
+  quantidade_transacoes,
+  volume_total_reais
+FROM
+  meses_categorias
+ORDER BY
+  mes ASC,           -- Mês crescente (mais antigo primeiro)
+  category ASC;      -- Categoria em ordem alfabética dentro do mês
+```
+
+---
+
+## ⚖️ Campo 4: Justificativa
+
+Seguindo o framework T-A-G, procurei detalhar na task um pouco do contexto sobre a query necessária e algumas particularidades da fonte de dados.
+Na action eu procurei detalhar o que seria necessário fazer exatamente, particularidades e regras gerais.
+Em goal eu procurei detalhar o resultado esperado, considerando o tipo de usuário que iria consumir o material.
