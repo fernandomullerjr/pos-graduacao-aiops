@@ -396,6 +396,7 @@ A entrega é um **repositório público no GitHub** contendo os prompts, outputs
 - Usar **ao menos 2 providers distintos** ao longo do desafio (OpenAI, Anthropic, Google, Meta ou local via Ollama).
 - **Registrar outputs ruins também**. Se um resultado não ficou bom, comentar na justificativa o que faria diferente.
 - Os dados dos cenários são fictícios — sem necessidade de sanitização.
+- Formatar tudo em Markdown.
 
 > ℹ️ Sete das oito questões já trazem o framework definido no enunciado: ali o valor está em **aplicar bem os componentes no prompt** e explicar como cada um aparece. Na **Q08** a escolha é sua entre os cinco do capítulo, e a justificativa compara com 2 alternativas. **Registrar o raciocínio, inclusive o que não funcionou, faz parte do valor da entrega.**
 
