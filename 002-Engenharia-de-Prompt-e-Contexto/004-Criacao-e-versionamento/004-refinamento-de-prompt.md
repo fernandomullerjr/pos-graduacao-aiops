@@ -30,6 +30,29 @@ Retorne apenas o prompt alterado em um arquivo Markdown.
 
 
 
+
+
+## Dockerfile de exemplo (input para validar o prompt gerado)
+
+Dockerfile propositalmente problemático usado para testar o prompt gerado. Contém vários antipatterns típicos: imagem sem tag, credenciais em variáveis de ambiente, ausência de usuário não-root, ausência de multi-stage, instalação de dependências de build em runtime. Cole esse arquivo na variável {DOCKERFILE} (ou equivalente) do prompt gerado para reproduzir a demo.
+
+~~~~dockerfile
+FROM python
+WORKDIR /app
+COPY . /app
+RUN apt-get update && apt-get install -y curl build-essential
+RUN pip install -r requirements.txt
+ENV DB_PASSWORD=admin123
+ENV API_KEY=sk-production-key-9f2a3b4c5d6e
+EXPOSE 5000
+CMD python app.py
+~~~~
+
+
+
+
+
+
 - Testando
 
 Você deve atuar como um engenheiro de prompt responsável por aprimorar
